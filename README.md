@@ -1,0 +1,1 @@
+Developed a Python-based automation that listens to GitHub repository events (issue creation, pull requests, commits) via webhooks and automatically generates corresponding JIRA tickets using REST APIs. 
