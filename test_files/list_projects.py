@@ -1,17 +1,15 @@
-# This code sample uses the 'requests' library:
-# http://docs.python-requests.org
 import requests
 from requests.auth import HTTPBasicAuth
 import json
 import os
 from dotenv import load_dotenv
 
-url = "https://luffy12.atlassian.net/rest/api/3/project"
-
 load_dotenv()
+url = os.getenv("URL")
 api_token = os.getenv("API_TOKEN")
+email = os.getenv("EMAIL")
 
-auth = HTTPBasicAuth("an.kit810716@gmail.com", api_token)
+auth = HTTPBasicAuth(email, api_token)
 
 headers = {
   "Accept": "application/json"

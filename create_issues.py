@@ -1,57 +1,63 @@
-# This code sample uses the 'requests' library:
-# http://docs.python-requests.org
 import requests
 from requests.auth import HTTPBasicAuth
 import json
 import os
 from dotenv import load_dotenv
-
-url = "https://luffy12.atlassian.net/rest/api/3/issue"
+from flask import Flask
 
 load_dotenv()
+url = os.getenv("URL")
 api_token = os.getenv("API_TOKEN")
+email = os.getenv("EMAIL")
 
-auth = HTTPBasicAuth("an.kit810716@gmail.com", api_token)
+app = Flask(__name__)
 
-headers = {
-  "Accept": "application/json",
-  "Content-Type": "application/json"
-}
+@app.route('/createJira', methods=['POST'])
+def createJira():
+    
+    auth = HTTPBasicAuth(email, api_token)
 
-payload = json.dumps( {
-  "fields": {
-    "description": {
-      "content": [
-        {
+    headers = {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    }
+
+    payload = json.dumps( {
+      "fields": {
+        "description": {
           "content": [
             {
-              "text": "This is my second Jira creation via API",
-              "type": "text"
+              "content": [
+                {
+                  "text": "Create Jira for first issue",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
             }
           ],
-          "type": "paragraph"
-        }
-      ],
-      "type": "doc",
-      "version": 1
-    },
-    "issuetype": {
-      "id": "10005"
-    },
-    "project": {
-      "id": "10000"
-    },
-    "summary": "Bug Jira",
-  },
-  "update": {}
-} )
+          "type": "doc",
+          "version": 1
+        },
+        "issuetype": {
+          "id": "10005"
+        },
+        "project": {
+          "id": "10000"
+        },
+        "summary": "Bug Jira",
+      },
+      "update": {}
+    } )
 
-response = requests.request(
-   "POST",
-   url,
-   data=payload,
-   headers=headers,
-   auth=auth
-)
+    response = requests.request(
+      "POST",
+      url,
+      data=payload,
+      headers=headers,
+      auth=auth
+    )
 
-print(json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": ")))
+    return json.dumps(json.loads(response.text), sort_keys=True, indent=4, separators=(",", ": "))
+
+app.run(host='0.0.0.0', port=5000)
